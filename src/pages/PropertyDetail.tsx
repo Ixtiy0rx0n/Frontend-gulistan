@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ListingDTO, api } from '@/services/api';
+import { ListingDTO, propertyApi } from '@/services/api';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
@@ -27,7 +27,7 @@ export default function PropertyDetail() {
 
         const fetchListing = async () => {
             try {
-                const data = await api.getListingById(Number(id));
+                const data = await propertyApi.getPropertyById(Number(id));
                 setListing(data);
             } catch (err) {
                 setError('Ma\'lumotni yuklashda xatolik yuz berdi');
@@ -149,15 +149,12 @@ export default function PropertyDetail() {
                                 <h2 className="text-xl font-semibold mb-2">Joylashuv</h2>
                                 <div className="aspect-[4/3] w-full rounded-lg overflow-hidden border bg-muted">
                                     <iframe
+                                        src={`https://www.openstreetmap.org/export/embed.html?bbox=${listing.longitude},${listing.latitude},${listing.longitude},${listing.latitude}&layer=mapnik&marker=${listing.latitude},${listing.longitude}`}
                                         width="100%"
                                         height="100%"
                                         style={{ border: 0 }}
                                         loading="lazy"
                                         allowFullScreen
-                                        referrerPolicy="no-referrer-when-downgrade"
-                                        src={`https://www.google.com/maps/embed/v1/place?key=${
-                                            import.meta.env.VITE_GOOGLE_MAPS_API_KEY
-                                        }&q=${listing.latitude},${listing.longitude}&zoom=15`}
                                     />
                                 </div>
                             </div>

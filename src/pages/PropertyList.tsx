@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ListingShortDTO, PropertyType, PageResponse, api } from '@/services/api';
+import { ListingShortDTO, PageListingShortDTO, propertyApi } from '@/services/api';
 import { PropertyCard } from '@/components/PropertyCard';
 import { PropertyFilter } from '@/components/PropertyFilter';
 import { Button } from '@/components/ui/button';
@@ -9,15 +9,17 @@ import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Pagination } from '@/components/ui/pagination';
 
+export type PropertyType = 'MEHMONXONA' | 'RESTORAN' | 'KAFE' | 'FASTFOOD' | 'AVTOXIZMAT' | 'POLYA' | 'EVAKUATOR' | 'OQUVMARKAZA' | 'DOKON';
+
 export default function PropertyList() {
     const [listings, setListings] = useState<ListingShortDTO[]>([]);
     const [loading, setLoading] = useState(true);
     const [selectedType, setSelectedType] = useState<PropertyType | null>(null);
-    const [pageData, setPageData] = useState<PageResponse<ListingShortDTO>>({
+    const [pageData, setPageData] = useState<PageListingShortDTO>({
         content: [],
         totalPages: 0,
         totalElements: 0,
-        size: 10,
+        size: 12,
         number: 0,
         first: true,
         last: true,
@@ -26,7 +28,7 @@ export default function PropertyList() {
         pageable: {
             offset: 0,
             pageNumber: 0,
-            pageSize: 10,
+            pageSize: 12,
             paged: true,
             sort: { empty: true, sorted: false, unsorted: true },
             unpaged: false
@@ -43,14 +45,14 @@ export default function PropertyList() {
         setError(null);
 
         try {
-            let response: PageResponse<ListingShortDTO>;
+            let response: PageListingShortDTO;
 
             if (type) {
-                response = await api.getListingsByType(type, page, pageData.size);
+                response = await propertyApi.getPropertiesByType(type);
             } else {
-                response = await api.getAllListings({
+                response = await propertyApi.getAllProperties({
                     page,
-                    size: pageData.size,
+                    size: 12,
                     sort: ['name']
                 });
             }
@@ -83,7 +85,7 @@ export default function PropertyList() {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    const handleViewDetails = (id: string) => {
+    const handleViewDetails = (id: number) => {
         navigate(`/listing/${id}`);
     };
 

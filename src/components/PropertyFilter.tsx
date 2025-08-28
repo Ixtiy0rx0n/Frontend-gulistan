@@ -1,4 +1,4 @@
-import { PropertyType } from '@/services/api';
+import { PropertyType } from '@/pages/PropertyList';
 import { Button } from '@/components/ui/button';
 
 interface PropertyFilterProps {
